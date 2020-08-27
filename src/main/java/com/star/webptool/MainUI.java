@@ -1,11 +1,15 @@
+package com.star.webptool;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MainUI {
     private JButton select_file;
@@ -27,7 +31,23 @@ public class MainUI {
                 int returnVal = addChooser.showDialog(root_panel, "图片选择");
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File[] files = addChooser.getSelectedFiles();
+
+                    List<String> fileNameList = Arrays.stream(files).map(new Function<File, String>() {
+                        @Override
+                        public String apply(File file) {
+                            return file.getAbsolutePath();
+                        }
+                    }).collect(Collectors.toList());
+                    ListModel<String> filePath = new DefaultComboBoxModel(fileNameList.toArray());
+                    file_list.setModel(filePath);
                 }
+            }
+        });
+        create_webp_anim.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int size = file_list.getModel().getSize();
+
             }
         });
     }
