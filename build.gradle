@@ -1,18 +1,32 @@
-plugins {
-    id 'java'
-}
+apply plugin: 'java'
 
 group 'com.star.webptool'
 version '1.0-SNAPSHOT'
 
 repositories {
-    jcenter()
     mavenCentral()
+}
+
+
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            def os = System.getProperty("os.name").toLowerCase()
+            if (os.contains("windows")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') with module("org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64:3.114.0")
+            }
+            else if (os.contains("linux")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') with module("org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64:3.114.0")
+            }
+            else if (os.contains("mac")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') with module("org.eclipse.platform:org.eclipse.swt.cocoa.macosx.x86_64:3.114.0")
+            }
+        }
+    }
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-//    implementation 'org.eclipse:swt:3.3.0-v3346'
-    implementation 'swt:swt-win32:3.0m8'
+    compile group: 'org.eclipse.platform', name: 'org.eclipse.swt.win32.win32.x86_64', version: '3.114.100'
 }
