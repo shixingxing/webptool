@@ -5,8 +5,12 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -63,12 +67,32 @@ public class MainUI {
             public void actionPerformed(ActionEvent e) {
                 int size = file_list.getModel().getSize();
 
+                if (size > 0) {
+
+                    StringBuilder builder = new StringBuilder();
+                    builder.append("img2webp -loop 0");
+                    for (int i = 0; i < size; i++) {
+                        builder.append(" ");
+                        builder.append(file_list.getModel().getElementAt(i));
+                    }
+                    builder.append(" -o output.webp");
+
+
+                    Runtime rt = Runtime.getRuntime();
+                    try {
+                        rt.exec(builder.toString());
+
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+
+                }
             }
         });
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("MainUI");
+        JFrame frame = new JFrame("WebpTool");
         try {
             frame.setContentPane(new MainUI().root_panel);
         } catch (Exception e) {
