@@ -24,7 +24,11 @@
             <preferred-size width="800" height="600"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <dropMode value="ON"/>
+          <model/>
+          <selectionMode value="1"/>
+        </properties>
       </component>
       <component id="d5a7c" class="javax.swing.JButton" binding="create_webp_anim">
         <constraints>
