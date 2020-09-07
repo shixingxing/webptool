@@ -71,7 +71,9 @@ public class MainUI {
                     builder.append("img2webp -loop 0");
                     for (int i = 0; i < size; i++) {
                         builder.append(" ");
+                        builder.append("\"");
                         builder.append(file_list.getModel().getElementAt(i));
+                        builder.append("\"");
                     }
                     builder.append(" -o output.webp");
 
