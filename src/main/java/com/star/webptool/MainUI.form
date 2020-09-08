@@ -19,19 +19,6 @@
           <text value="选择文件"/>
         </properties>
       </component>
-      <component id="783d6" class="javax.swing.JList" binding="file_list">
-        <constraints>
-          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="800" height="600"/>
-          </grid>
-          <gridbag weightx="1.0" weighty="1.0"/>
-        </constraints>
-        <properties>
-          <dropMode value="ON"/>
-          <model/>
-          <selectionMode value="1"/>
-        </properties>
-      </component>
       <component id="d5a7c" class="javax.swing.JButton" binding="create_webp_anim">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -41,6 +28,25 @@
           <text value="生成webp动图"/>
         </properties>
       </component>
+      <scrollpane id="afa6b">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="783d6" class="javax.swing.JList" binding="file_list">
+            <constraints/>
+            <properties>
+              <dragEnabled value="true"/>
+              <dropMode value="ON"/>
+              <model/>
+              <selectionMode value="1"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

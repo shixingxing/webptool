@@ -31,6 +31,7 @@ public class MainUI {
 
                 JFileChooser addChooser = new JFileChooser();
                 addChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                addChooser.setCurrentDirectory(new File("D:"));
                 addChooser.setMultiSelectionEnabled(true);
                 addChooser.setFileFilter(filter);
                 int returnVal = addChooser.showDialog(root_panel, "图片选择");
@@ -74,6 +75,8 @@ public class MainUI {
                         builder.append("\"");
                         builder.append(file_list.getModel().getElementAt(i));
                         builder.append("\"");
+                        //默认1000/24 = 42毫秒每帧
+                        builder.append(" -d 42");
                     }
                     builder.append(" -o output.webp");
 
@@ -131,19 +134,6 @@ public class MainUI {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         root_panel.add(select_file, gbc);
-        file_list = new JList();
-        file_list.setDropMode(DropMode.ON);
-        final DefaultListModel defaultListModel1 = new DefaultListModel();
-        file_list.setModel(defaultListModel1);
-        file_list.setSelectionMode(1);
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        root_panel.add(file_list, gbc);
         create_webp_anim = new JButton();
         create_webp_anim.setText("生成webp动图");
         gbc = new GridBagConstraints();
@@ -152,6 +142,22 @@ public class MainUI {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         root_panel.add(create_webp_anim, gbc);
+        final JScrollPane scrollPane1 = new JScrollPane();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        root_panel.add(scrollPane1, gbc);
+        file_list = new JList();
+        file_list.setDragEnabled(true);
+        file_list.setDropMode(DropMode.ON);
+        final DefaultListModel defaultListModel1 = new DefaultListModel();
+        file_list.setModel(defaultListModel1);
+        file_list.setSelectionMode(1);
+        scrollPane1.setViewportView(file_list);
     }
 
     /**
