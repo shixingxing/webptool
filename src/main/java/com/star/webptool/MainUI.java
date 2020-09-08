@@ -20,6 +20,10 @@ public class MainUI {
     private JList file_list;
     private JButton create_webp_anim;
     private JPanel root_panel;
+    private JTextField frame_text;
+
+
+    private File defaultDir;
 
     public MainUI() {
         String REGEX = "[^(0-9)]";
@@ -31,12 +35,19 @@ public class MainUI {
 
                 JFileChooser addChooser = new JFileChooser();
                 addChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                addChooser.setCurrentDirectory(new File("D:"));
+                if (defaultDir != null) {
+                    addChooser.setCurrentDirectory(defaultDir);
+                }
                 addChooser.setMultiSelectionEnabled(true);
                 addChooser.setFileFilter(filter);
                 int returnVal = addChooser.showDialog(root_panel, "图片选择");
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     File[] files = addChooser.getSelectedFiles();
+
+                    if (files != null && files.length > 0) {
+                        //把选中的目录作为默认值
+                        defaultDir = files[0].getParentFile();
+                    }
 
                     List<String> fileNameList = Arrays.stream(files)
                             .sorted(new Comparator<File>() {
@@ -61,9 +72,25 @@ public class MainUI {
                 }
             }
         });
+
         create_webp_anim.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String frame = frame_text.getText();
+                int frameInt;
+                try {
+                    frameInt = Integer.valueOf(frame);
+                } catch (NumberFormatException numberFormatException) {
+                    numberFormatException.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "帧率数据错误，只能为数字", "错误", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (frameInt <= 0) {
+                    JOptionPane.showMessageDialog(null, "帧率数据错误，必须大于0", "错误", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                String timePerFrame = String.valueOf(1000 / frameInt);
                 int size = file_list.getModel().getSize();
 
                 if (size > 0) {
@@ -76,7 +103,8 @@ public class MainUI {
                         builder.append(file_list.getModel().getElementAt(i));
                         builder.append("\"");
                         //默认1000/24 = 42毫秒每帧
-                        builder.append(" -d 42");
+                        builder.append(" -d ");
+                        builder.append(timePerFrame);
                     }
                     builder.append(" -o output.webp");
 
@@ -131,13 +159,14 @@ public class MainUI {
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         root_panel.add(select_file, gbc);
         create_webp_anim = new JButton();
         create_webp_anim.setText("生成webp动图");
         gbc = new GridBagConstraints();
-        gbc.gridx = 1;
+        gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -145,8 +174,8 @@ public class MainUI {
         final JScrollPane scrollPane1 = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 2;
+        gbc.gridy = 2;
+        gbc.gridwidth = 3;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -156,8 +185,26 @@ public class MainUI {
         file_list.setDropMode(DropMode.ON);
         final DefaultListModel defaultListModel1 = new DefaultListModel();
         file_list.setModel(defaultListModel1);
+        file_list.setPreferredSize(new Dimension(0, 0));
+        file_list.setRequestFocusEnabled(true);
         file_list.setSelectionMode(1);
         scrollPane1.setViewportView(file_list);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        root_panel.add(panel1, gbc);
+        final JLabel label1 = new JLabel();
+        label1.setText("帧率：");
+        panel1.add(label1);
+        frame_text = new JTextField();
+        frame_text.setMinimumSize(new Dimension(60, 30));
+        frame_text.setPreferredSize(new Dimension(60, 30));
+        frame_text.setText("24");
+        panel1.add(frame_text);
     }
 
     /**
