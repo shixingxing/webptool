@@ -71,6 +71,20 @@
               <text value="24"/>
             </properties>
           </component>
+          <component id="9dcc3" class="javax.swing.JLabel">
+            <constraints/>
+            <properties>
+              <text value="压缩率："/>
+            </properties>
+          </component>
+          <component id="cad58" class="javax.swing.JTextField" binding="zip_text">
+            <constraints/>
+            <properties>
+              <minimumSize width="60" height="30"/>
+              <preferredSize width="60" height="30"/>
+              <text value="90"/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

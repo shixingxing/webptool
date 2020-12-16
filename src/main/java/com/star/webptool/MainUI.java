@@ -21,6 +21,7 @@ public class MainUI {
     private JButton create_webp_anim;
     private JPanel root_panel;
     private JTextField frame_text;
+    private JTextField zip_text;
 
 
     private File defaultDir;
@@ -56,9 +57,14 @@ public class MainUI {
                                     String file1Name = o1.getName();
                                     String file2Name = o2.getName();
 
-                                    int a = Integer.valueOf(pattern.matcher(file1Name).replaceAll("").trim());
-                                    int b = Integer.valueOf(pattern.matcher(file2Name).replaceAll("").trim());
-                                    return a - b;
+                                    try {
+                                        int a = Integer.parseInt(pattern.matcher(file1Name).replaceAll("").trim());
+                                        int b = Integer.parseInt(pattern.matcher(file2Name).replaceAll("").trim());
+                                        return a - b;
+                                    } catch (NumberFormatException numberFormatException) {
+                                        numberFormatException.printStackTrace();
+                                    }
+                                    return 0;
                                 }
                             })
                             .map(new Function<File, String>() {
@@ -77,9 +83,11 @@ public class MainUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String frame = frame_text.getText();
+                //压缩率
+                String zip = zip_text.getText();
                 int frameInt;
                 try {
-                    frameInt = Integer.valueOf(frame);
+                    frameInt = Integer.parseInt(frame);
                 } catch (NumberFormatException numberFormatException) {
                     numberFormatException.printStackTrace();
                     JOptionPane.showMessageDialog(null, "帧率数据错误，只能为数字", "错误", JOptionPane.WARNING_MESSAGE);
@@ -90,6 +98,18 @@ public class MainUI {
                     return;
                 }
 
+                int zipInt;
+                try {
+                    zipInt = Integer.parseInt(zip);
+                } catch (NumberFormatException numberFormatException) {
+                    numberFormatException.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "压缩率数据错误，只能为数字", "错误", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                if (zipInt <= 0 || zipInt > 100) {
+                    JOptionPane.showMessageDialog(null, "压缩率数据错误，必须大于0,小于100", "错误", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 String timePerFrame = String.valueOf(1000 / frameInt);
                 int size = file_list.getModel().getSize();
 
@@ -97,6 +117,10 @@ public class MainUI {
 
                     StringBuilder builder = new StringBuilder();
                     builder.append("img2webp -loop 0");
+                    //有损压缩配置
+                    builder.append(" -lossy -q ");
+                    builder.append(zip);
+
                     for (int i = 0; i < size; i++) {
                         builder.append(" ");
                         builder.append("\"");
@@ -205,6 +229,14 @@ public class MainUI {
         frame_text.setPreferredSize(new Dimension(60, 30));
         frame_text.setText("24");
         panel1.add(frame_text);
+        final JLabel label2 = new JLabel();
+        label2.setText("压缩率：");
+        panel1.add(label2);
+        zip_text = new JTextField();
+        zip_text.setMinimumSize(new Dimension(60, 30));
+        zip_text.setPreferredSize(new Dimension(60, 30));
+        zip_text.setText("90");
+        panel1.add(zip_text);
     }
 
     /**
@@ -214,4 +246,9 @@ public class MainUI {
         return root_panel;
     }
 
+    public void setData(MainUI data) {
+    }
+
+    public void getData(MainUI data) {
+    }
 }
