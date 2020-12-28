@@ -6,8 +6,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -135,10 +138,23 @@ public class MainUI {
 
                     Runtime rt = Runtime.getRuntime();
                     try {
-                        rt.exec(builder.toString());
+                        Process process = rt.exec(builder.toString());
+                        InputStream inputStream = process.getErrorStream();
+                        InputStreamReader isr = new InputStreamReader(inputStream);
+                        BufferedReader buff = new BufferedReader(isr);
 
+                        StringBuilder message = new StringBuilder();
+                        String line;
+                        while ((line = buff.readLine()) != null) {
+                            message.append(line);
+                        }
+
+                        if (message.length() > 0) {
+                            JOptionPane.showMessageDialog(null, message.toString(), "错误", JOptionPane.WARNING_MESSAGE);
+                        }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
+                        JOptionPane.showMessageDialog(null, ioException.getMessage(), "错误", JOptionPane.WARNING_MESSAGE);
                     }
 
                 }
