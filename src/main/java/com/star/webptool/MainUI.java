@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -140,7 +141,7 @@ public class MainUI {
                     try {
                         Process process = rt.exec(builder.toString());
                         InputStream inputStream = process.getErrorStream();
-                        InputStreamReader isr = new InputStreamReader(inputStream);
+                        InputStreamReader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
                         BufferedReader buff = new BufferedReader(isr);
 
                         StringBuilder message = new StringBuilder();
@@ -150,7 +151,7 @@ public class MainUI {
                         }
 
                         if (message.length() > 0) {
-                            JOptionPane.showMessageDialog(null, message.toString(), "错误", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(null, message.toString(), "提示", JOptionPane.INFORMATION_MESSAGE);
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
